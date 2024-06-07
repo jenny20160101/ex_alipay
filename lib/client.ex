@@ -444,11 +444,11 @@ defmodule ExAlipay.Client do
     end
   end
 
-  defp verify_status(%{status: 200, body: body}) do
+  defp verify_status(%{status_code: 200, body: body}) do
     {:ok, body}
   end
 
-  defp verify_status(%{status: status_code}) do
+  defp verify_status(%{status_code: status_code}) do
     {:error, %RequestError{status_code: status_code}}
   end
 
