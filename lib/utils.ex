@@ -75,7 +75,8 @@ defmodule ExAlipay.Utils do
   end
 
   def get_gateway(%Client{sandbox?: true}) do
-    "https://openapi.alipaydev.com/gateway.do"
+   # "https://openapi.alipaydev.com/gateway.do"
+    "https://openapi-sandbox.dl.alipaydev.com/gateway.do"
   end
 
   defp create_timestamp do
