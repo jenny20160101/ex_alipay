@@ -433,7 +433,7 @@ defmodule ExAlipay.Client do
   def request(client, method, content, ext_params \\ %{}) do
     url = Utils.build_request_url(client, method, content, ext_params)
 
-    with {:ok, resp} <- @http_adapter.get(url),
+    with {:ok, resp} <- @http_adapter.get(url, [], ssl: [verify: :verify_none]),
          {:ok, body} <- verify_status(resp),
          {:ok, key} <- verify_request_sign(client, body),
          {:ok, json_data} <- Jason.decode(body),
