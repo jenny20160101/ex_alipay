@@ -86,6 +86,8 @@ defmodule ExAlipay.Client do
   alias ExAlipay.{Client, RSA, Utils}
   alias ExAlipay.{RequestError, ResponseError}
 
+  require Logger
+
   @http_adapter Application.get_env(:ex_alipay, :http_adapter)
 
   defstruct appid: nil,
@@ -432,8 +434,12 @@ defmodule ExAlipay.Client do
   @spec request(%Client{}, binary, map, map) :: map
   def request(client, method, content, ext_params \\ %{}) do
     url = Utils.build_request_url(client, method, content, ext_params)
+    Logger.info("ex_alipay http_request url: #{url}")
 
-    with {:ok, resp} <- @http_adapter.get(url, [], ssl: [verify: :verify_none]),
+    http_response = @http_adapter.get(url, [], ssl: [verify: :verify_none])
+    Logger.info("ex_alipay http_response: #{inspect(http_response, pretty: true)}")
+
+    with {:ok, resp} <- http_response,
          {:ok, body} <- verify_status(resp),
          {:ok, key} <- verify_request_sign(client, body),
          {:ok, json_data} <- Jason.decode(body),
